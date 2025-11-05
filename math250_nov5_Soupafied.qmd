@@ -1,0 +1,100 @@
+---
+title: "math250_nov5_Soupafied"
+author: "Josmar Osorio"
+format: html
+embed-resources: true
+---
+
+## Inference Problems
+
+```{r}
+#| message: false
+#| warning: false
+library(tidyverse)
+library(ISLR2)
+```
+
+We will be using the `Carseats` dataset from the `ISLR2` package for the following problems.
+```{r}
+glimpse(Carseats)
+```
+
+## Problem 1
+
+The company claims that the average price of their Carseats is 110. We will test this claim.
+
+**Null Hypothesis**: ($\mu = 110$)
+
+**Alternative hypothesis**: ($\mu \ne 110$)
+
+
+```{r}
+t.test(Carseats$Price,
+       mu = 110)
+```
+
+With a `p-value` of 1.429e-06 we overwhelmingly reject the null hypothesis. This means we reject the claim that the true mean price of the carseats is 110, and that the company is wrong.
+
+```{r}
+#| message: false
+ggplot(Carseats, aes(x = Price)) +
+  geom_histogram(fill = "salmon") +
+  geom_vline(xintercept = 113.4677) +
+  geom_vline(xintercept = 118.1223) +
+  geom_vline(xintercept = 110, color = "blue") +
+  scale_x_continuous(breaks = seq(0, 200, by = 10)) +
+  theme_minimal()+
+  labs(
+    title = "Carseat Price Distribution with claimed mean and Confidence Interval",
+    caption = "95% confidence interval is between the black lines and the claimed price mean is the blue line",
+    y = "Count"
+    
+  )
+```
+
+From the plot it is clear that 110 is not between where we think the true mean is. We cannot accept the claim that the average price is 110.
+
+## Problem 2
+
+We will now compute a 90% confidence interval for the mean competitor price in the population.
+
+```{r}
+t.test(Carseats$CompPrice, conf.level = 0.90)
+```
+
+We are 95% confident that the true `compPrice` mean lies between 123.7109 and 126.2391.
+
+```{r}
+compPrice_m <- mean(Carseats$CompPrice)
+compPrice_m
+```
+**Sample Mean**:
+
+$\bar{x} = 124.975$
+
+```{r}
+MOE <- (126.2391-123.7109)/2
+MOE
+```
+
+**Margin Of Error**:
+
+$ME = \pm 1.2641$
+
+**Confidence Interval**:
+
+$CI = 124.975 \pm 1.2641$
+
+## Problem 3
+
+For this problem we will be using the `penguins` data set to create a contingency table of the `species`, `island` and marginal counts.
+
+```{r}
+t <- table(penguins$species,penguins$island)
+
+addmargins(t)
+```
+
+## Problem 4
+
+Upload to Github
